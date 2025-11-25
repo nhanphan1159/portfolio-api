@@ -11,6 +11,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.19.6
         version: 1.19.6(hono@4.10.6)
+      '@prisma/adapter-d1':
+        specifier: ^7.0.0
+        version: 7.0.0
       '@prisma/adapter-libsql':
         specifier: ^7.0.0
         version: 7.0.0
@@ -41,7 +44,7 @@ importers:
         version: 5.9.3
       wrangler:
         specifier: ^4.50.0
-        version: 4.50.0
+        version: 4.50.0(@cloudflare/workers-types@4.20251125.0)
 
 packages:
 
@@ -87,6 +90,9 @@ packages:
     engines: {node: '>=16'}
     cpu: [x64]
     os: [win32]
+
+  '@cloudflare/workers-types@4.20251125.0':
+    resolution: {integrity: sha512-YZdO/IX10DiHb2v+7H2CL5SKAbxJQIG22jNefgtW86YMf5LvQk6f75v5T/j1ju56MBwm6RzcqvsECF+cXs2h3g==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -585,6 +591,9 @@ packages:
   '@poppinss/exception@1.2.2':
     resolution: {integrity: sha512-m7bpKCD4QMlFCjA/nKTs23fuvoVFoA83brRKmObCUNmi/9tVu8Ve3w4YQAnJu4q3Tjf5fr685HYIC/IA2zHRSg==}
 
+  '@prisma/adapter-d1@7.0.0':
+    resolution: {integrity: sha512-xfD6feu1YraZInfBxCHYnOpiH6yLWVXTW0oaNgdvvVpc2s/ZcdtwQv+P2TMZ6CrP9iiXBtwiy5zJlgORrTJzSw==}
+
   '@prisma/adapter-libsql@7.0.0':
     resolution: {integrity: sha512-RspyVP5FgvNhsb4XdpbcUfiWWh/JXucTxzLUVKlrL/sLYQ50Mxx855cElncWjl9u1chaLC5AOLqYC4wNH8XOzA==}
 
@@ -847,6 +856,10 @@ packages:
   kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
+
+  ky@1.7.5:
+    resolution: {integrity: sha512-HzhziW6sc5m0pwi5M196+7cEBtbt0lCYi67wNsiwMUmz833wloE0gbzJPWKs1gliFKQb34huItDQX97LyOdPdA==}
+    engines: {node: '>=18'}
 
   libsql@0.3.19:
     resolution: {integrity: sha512-Aj5cQ5uk/6fHdmeW0TiXK42FqUlwx7ytmMLPSaUQPin5HKKKuUPD62MAbN4OEweGBBI7q1BekoEN4gPUEL6MZA==}
@@ -1113,6 +1126,8 @@ snapshots:
 
   '@cloudflare/workerd-windows-64@1.20251118.0':
     optional: true
+
+  '@cloudflare/workers-types@4.20251125.0': {}
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -1434,6 +1449,12 @@ snapshots:
 
   '@poppinss/exception@1.2.2': {}
 
+  '@prisma/adapter-d1@7.0.0':
+    dependencies:
+      '@cloudflare/workers-types': 4.20251125.0
+      '@prisma/driver-adapter-utils': 7.0.0
+      ky: 1.7.5
+
   '@prisma/adapter-libsql@7.0.0':
     dependencies:
       '@libsql/client': 0.8.1
@@ -1730,6 +1751,8 @@ snapshots:
 
   kleur@4.1.5: {}
 
+  ky@1.7.5: {}
+
   libsql@0.3.19:
     dependencies:
       '@neon-rs/load': 0.0.4
@@ -1970,7 +1993,7 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20251118.0
       '@cloudflare/workerd-windows-64': 1.20251118.0
 
-  wrangler@4.50.0:
+  wrangler@4.50.0(@cloudflare/workers-types@4.20251125.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.0
       '@cloudflare/unenv-preset': 2.7.11(unenv@2.0.0-rc.24)(workerd@1.20251118.0)
@@ -1981,6 +2004,7 @@ snapshots:
       unenv: 2.0.0-rc.24
       workerd: 1.20251118.0
     optionalDependencies:
+      '@cloudflare/workers-types': 4.20251125.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.19.6",
+    "@prisma/adapter-d1": "^7.0.0",
     "@prisma/adapter-libsql": "^7.0.0",
     "@prisma/client": "^6.19.0",
     "better-sqlite3": "^12.4.6",
