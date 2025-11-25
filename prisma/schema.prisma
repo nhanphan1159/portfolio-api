@@ -34,7 +34,7 @@ model Experience {
   endAT     String
   role      String
   company   String
-  job       Array
+  job       String   // Store as JSON string
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

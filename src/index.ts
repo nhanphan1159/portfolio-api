@@ -14,7 +14,7 @@ app.get(ROUTE.PROJECTS, async (c) => {
 
 app.get(ROUTE.SKILLS, async (c) => {
   const skills = await prisma.skill.findMany();
-  return c.json(skills.map((s) => s.name));
+  return c.json(skills.map((s: { name: string }) => s.name));
 });
 
 app.get(ROUTE.ABOUT, async (c) => {
