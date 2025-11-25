@@ -12,10 +12,10 @@
   "dependencies": {
     "@hono/node-server": "^1.19.6",
     "@prisma/adapter-libsql": "^7.0.0",
-    "@prisma/client": "6",
+    "@prisma/client": "^6.19.0",
     "better-sqlite3": "^12.4.6",
     "hono": "^4.10.6",
-    "prisma": "6"
+    "prisma": "^6.19.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
