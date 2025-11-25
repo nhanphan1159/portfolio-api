@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE "Experience" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "startAt" TEXT NOT NULL,
+    "endAT" TEXT NOT NULL,
+    "role" TEXT NOT NULL,
+    "company" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
