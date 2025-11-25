@@ -22,4 +22,4 @@ INSERT INTO Skill (name) VALUES
 
 -- Insert About
 INSERT INTO About (name, role, content, createdAt, updatedAt) VALUES
-  ('Phan Huynh Huu Nhan', 'Front End Developer', 'Crafting beautiful, performant web experiences with React, Next.js, and modern web technologies. Passionate about building scalable applications with smooth animations and intuitive user interfaces.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+  ('Phan Huynh Huu Nhan', '["Front-end Developer", "Website Developer"]', 'Crafting beautiful, performant web experiences with React, Next.js, and modern web technologies. Passionate about building scalable applications with smooth animations and intuitive user interfaces.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

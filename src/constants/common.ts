@@ -1,4 +1,5 @@
 export const ROUTE = {
+  API: "/api",
   HOME: "/",
   PROJECTS: "/projects",
   SKILLS: "/skills",

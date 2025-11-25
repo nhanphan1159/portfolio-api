@@ -54,6 +54,11 @@ async function main() {
         startAt: "Jan 2022",
         endAT: "Present",
         role: "Front End Developer",
+        job: JSON.stringify([
+          "Develop and maintain web applications using React and Next.js",
+          "Collaborate with design team to implement UI/UX improvements",
+          "Write clean, maintainable code following best practices",
+        ]),
       },
     ],
   });
