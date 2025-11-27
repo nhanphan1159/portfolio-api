@@ -29,16 +29,25 @@ export const configureCloudinary = (env?: {
  * @param folder - Folder name in Cloudinary (default: 'portfolio')
  * @returns Cloudinary upload result with URL
  */
+/**
+ * Upload via Cloudinary REST API (more compatible with Workers)
+ */
 export const uploadToCloudinary = async (
   file: Buffer | string | ArrayBuffer | Uint8Array,
   folder: string = "portfolio"
 ): Promise<{ url: string; publicId: string; secureUrl: string }> => {
   try {
+    const config = cloudinary.config();
+    
+    if (!config.cloud_name || !config.api_key || !config.api_secret) {
+      throw new Error("Cloudinary not configured");
+    }
+
     let base64String: string;
     
     // Convert different types to base64
     if (typeof file === "string") {
-      base64String = file;
+      base64String = file.startsWith("data:") ? file : `data:image/png;base64,${file}`;
     } else if (Buffer.isBuffer(file)) {
       base64String = `data:image/png;base64,${file.toString("base64")}`;
     } else if (file instanceof ArrayBuffer) {
@@ -52,11 +61,52 @@ export const uploadToCloudinary = async (
       throw new Error("Unsupported file type");
     }
 
-    const result = await cloudinary.uploader.upload(base64String, {
+    // Generate timestamp and signature for authentication
+    const timestamp = Math.floor(Date.now() / 1000);
+    const crypto = await import("crypto");
+    
+    // Prepare upload parameters
+    const uploadParams: Record<string, string> = {
       folder,
-      resource_type: "auto",
-      transformation: [{ quality: "auto", fetch_format: "auto" }],
+      timestamp: timestamp.toString(),
+      upload_preset: "",
+    };
+    
+    // Generate signature
+    const stringToSign = Object.keys(uploadParams)
+      .filter(key => uploadParams[key])
+      .sort()
+      .map(key => `${key}=${uploadParams[key]}`)
+      .join("&") + config.api_secret;
+    
+    const signature = crypto.createHash("sha1").update(stringToSign).digest("hex");
+
+    // Upload using REST API
+    const formData = new FormData();
+    formData.append("file", base64String);
+    formData.append("folder", folder);
+    formData.append("timestamp", timestamp.toString());
+    formData.append("api_key", config.api_key);
+    formData.append("signature", signature);
+
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${config.cloud_name}/image/upload`;
+    
+    console.log("📤 Uploading to Cloudinary via REST API...");
+    
+    const response = await fetch(uploadUrl, {
+      method: "POST",
+      body: formData,
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Cloudinary upload failed:", errorText);
+      throw new Error(`Cloudinary API error: ${response.status} - ${errorText}`);
+    }
+
+    const result = await response.json() as any;
+    
+    console.log("✅ Cloudinary upload successful:", result.secure_url);
     
     return {
       url: result.url,
