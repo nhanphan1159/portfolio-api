@@ -44,10 +44,11 @@ export const postProject = (
 
       // Upload imgMain (required)
       if (imgMainFile && imgMainFile instanceof File) {
+        console.log(`📸 Uploading main image: ${imgMainFile.name} (${(imgMainFile.size / 1024).toFixed(2)}KB)`);
         const arrayBuffer = await imgMainFile.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        const result = await uploadToCloudinary(buffer, "portfolio/projects");
+        const result = await uploadToCloudinary(arrayBuffer, "portfolio/projects");
         imgMainUrl = result.secureUrl;
+        console.log(`✅ Main image uploaded: ${imgMainUrl}`);
       } else {
         return c.json({ error: "imgMain file is required" }, 400);
       }
@@ -59,13 +60,14 @@ export const postProject = (
 
         for (const file of fileArray) {
           if (file instanceof File) {
+            console.log(`  - Uploading: ${file.name} (${(file.size / 1024).toFixed(2)}KB)`);
             const arrayBuffer = await file.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
             const result = await uploadToCloudinary(
-              buffer,
+              arrayBuffer,
               "portfolio/projects"
             );
             imgUrls.push(result.secureUrl);
+            console.log(`  ✅ Uploaded: ${result.secureUrl}`);
           }
         }
       }

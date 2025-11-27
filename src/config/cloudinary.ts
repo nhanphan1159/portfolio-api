@@ -30,26 +30,47 @@ export const configureCloudinary = (env?: {
  * @returns Cloudinary upload result with URL
  */
 export const uploadToCloudinary = async (
-  file: Buffer | string,
+  file: Buffer | string | ArrayBuffer | Uint8Array,
   folder: string = "portfolio"
 ): Promise<{ url: string; publicId: string; secureUrl: string }> => {
   try {
-    const result = await cloudinary.uploader.upload(
-      Buffer.isBuffer(file)
-        ? `data:image/png;base64,${file.toString("base64")}`
-        : file,
-      {
-        folder,
-        resource_type: "auto",
-        transformation: [{ quality: "auto", fetch_format: "auto" }],
-      }
-    );
+    let base64String: string;
+    
+    // Convert different types to base64
+    if (typeof file === "string") {
+      base64String = file;
+    } else if (Buffer.isBuffer(file)) {
+      base64String = `data:image/png;base64,${file.toString("base64")}`;
+    } else if (file instanceof ArrayBuffer) {
+      const uint8Array = new Uint8Array(file);
+      const buffer = Buffer.from(uint8Array);
+      base64String = `data:image/png;base64,${buffer.toString("base64")}`;
+    } else if (file instanceof Uint8Array) {
+      const buffer = Buffer.from(file);
+      base64String = `data:image/png;base64,${buffer.toString("base64")}`;
+    } else {
+      throw new Error("Unsupported file type");
+    }
+
+    const result = await cloudinary.uploader.upload(base64String, {
+      folder,
+      resource_type: "auto",
+      transformation: [{ quality: "auto", fetch_format: "auto" }],
+    });
+    
     return {
       url: result.url,
       secureUrl: result.secure_url,
       publicId: result.public_id,
     };
   } catch (error) {
+    // Log detailed error for debugging
+    console.error("Cloudinary upload error details:", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      hasCloudinaryConfig: !!cloudinary.config().cloud_name
+    });
+    
     // Return more specific error message
     if (error instanceof Error) {
       throw new Error(`Cloudinary upload failed: ${error.message}`);
