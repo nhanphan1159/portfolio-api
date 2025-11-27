@@ -11,6 +11,7 @@ import { getContact } from "./api/get/contact";
 import { postSkill } from "./api/post/skill";
 import { postContact } from "./api/post/contact";
 import { postProject } from "./api/post/project";
+import { postUpload } from "./api/post/upload";
 import { putContact } from "./api/put/contact";
 import { putProject } from "./api/put/project";
 
@@ -39,6 +40,7 @@ getContact(app, prisma);
 postSkill(app, prisma);
 postContact(app, prisma);
 postProject(app, prisma);
+postUpload(app);
 
 //put
 putContact(app, prisma);
@@ -47,6 +49,19 @@ putProject(app, prisma);
 //health check
 app.get(ROUTE.HEALTH, (c) => {
   return c.json({ status: "OK" });
+});
+
+// Global error handler
+app.onError((err, c) => {
+  console.error("Global error:", err);
+  return c.json(
+    {
+      error: "Internal Server Error",
+      message: err.message,
+      stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    },
+    500
+  );
 });
 
 export default app;
