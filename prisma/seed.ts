@@ -10,6 +10,7 @@ async function main() {
   await prisma.project.deleteMany();
   await prisma.about.deleteMany();
   await prisma.experience.deleteMany();
+  await prisma.contact.deleteMany();
 
   // Thêm projects
   const projects = await prisma.project.createMany({
@@ -64,7 +65,17 @@ async function main() {
   });
   console.log(`✅ Created ${experience.count} experience entries`);
 
-  console.log("🎉 Seeding completed!");
+  // Thêm contact
+  const contact = await prisma.contact.createMany({
+    data: [
+      {
+        address: "Ho Chi Minh City, Vietnam",
+        email: "nhanphan1159@gmail.com",
+        phone: "+84 383 283 926",
+      },
+    ],
+  });
+  console.log(`✅ Created ${contact.count} contact entries`);
 
   // Thêm skills
   const skills = await prisma.skill.createMany({

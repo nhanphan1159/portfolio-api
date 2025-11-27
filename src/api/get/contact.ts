@@ -9,7 +9,7 @@ export const getContact = (
 ) => {
   app.get(`${ROUTE.API}${ROUTE.CONTACT}`, async (c) => {
     const db = prisma || getPrisma(c.env.portfolio_db);
-    const contacts = await db.contact.findMany();
+    const contacts = await db.contact.findFirst();
     return c.json(contacts);
   });
 };
