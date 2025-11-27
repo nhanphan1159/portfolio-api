@@ -11,7 +11,7 @@ model Project {
   id      Int      @id @default(autoincrement())
   title   String   @default("")
   task    String   @default("")  
-  imgMain String   @default("")  
+  imgMain String   @default("")  @map("imgMain")
   img     String   @default("[]") 
   url     String? 
   createdAt DateTime @default(now())
