@@ -3,10 +3,10 @@ name: Deploy to Cloudflare Workers
 on:
   push:
     branches:
-      - main # Deploy khi push lên branch main
+      - main
   pull_request:
     branches:
-      - main # Optional: Test khi tạo PR
+      - main
 
 jobs:
   deploy:
@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20" # Hoặc version bạn đang dùng
+          node-version: "20"
           cache: "pnpm"
 
       - name: Install dependencies
