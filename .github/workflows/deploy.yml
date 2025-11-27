@@ -28,15 +28,25 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --no-frozen-lockfile --no-optional
 
       - name: Generate Prisma Client
-        run: pnpm prisma generate
+        run: npx prisma generate
 
       # Note: Migrations should be run manually with:
       # npx prisma migrate dev (local)
       # npx prisma migrate deploy (production - when prisma supports D1 better)
       # For now, schema changes are deployed via Prisma Client only
+
+      - name: Setup Cloudinary Secrets
+        run: |
+          echo "Setting up Cloudinary secrets..."
+          npx wrangler secret put CLOUDINARY_CLOUD_NAME --env production <<< "${{ secrets.CLOUDINARY_CLOUD_NAME }}" || true
+          npx wrangler secret put CLOUDINARY_API_KEY --env production <<< "${{ secrets.CLOUDINARY_API_KEY }}" || true
+          npx wrangler secret put CLOUDINARY_API_SECRET --env production <<< "${{ secrets.CLOUDINARY_API_SECRET }}" || true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
