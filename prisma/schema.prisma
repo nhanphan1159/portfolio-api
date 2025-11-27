@@ -39,4 +39,11 @@ model Experience {
   updatedAt DateTime @updatedAt
 }
 
+model Contact {
+  id    Int    @id @default(autoincrement())
+  address  String
+  email String
+  phone String
+}
+
 

@@ -1,69 +1,48 @@
 import { Hono } from "hono";
-import { cors } from "hono/cors";
 import { PrismaClient } from "@prisma/client";
-import { PrismaD1 } from "@prisma/adapter-d1";
 import { ROUTE } from "./constants/common";
+import { corsMiddleware } from "./middleware";
+import { getHome } from "./api/get/home";
+import { getProject } from "./api/get/project";
+import { getSkill } from "./api/get/skill";
+import { getAbout } from "./api/get/about";
+import { getExperience } from "./api/get/experience";
+import { getContact } from "./api/get/contact";
+import { postSkill } from "./api/post/skill";
+import { postContact } from "./api/post/contact";
+import { putContact } from "./api/put/contact";
 
-type Bindings = {
-  portfolio_db: any; // D1Database type from @cloudflare/workers-types
-};
+const app = new Hono<{ Bindings: IBindings }>();
 
-const app = new Hono<{ Bindings: Bindings }>();
 // Add CORS middleware
-app.use(
-  "/*",
-  cors({
-    origin: "*", // Allow all origins, hoặc specify domain của bạn
-    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+app.use("/*", corsMiddleware());
 
-// Initialize Prisma with D1
-const getPrisma = (db: any) => {
-  const adapter = new PrismaD1(db);
-  return new PrismaClient({ adapter });
-};
+// Initialize Prisma for local development only
+// On Cloudflare Workers, prisma will be undefined and API functions will use c.env.portfolio_db
+let prisma: PrismaClient | undefined;
+if (typeof process !== "undefined" && process.env) {
+  // Running in Node.js (local development)
+  prisma = new PrismaClient();
+}
 
-app.get(`${ROUTE.API}${ROUTE.HOME}`, (c) =>
-  c.json({ message: "Welcome to my Portfolio API!" })
-);
+//get
+getHome(app);
+getProject(app, prisma);
+getSkill(app, prisma);
+getAbout(app, prisma);
+getExperience(app, prisma);
+getContact(app, prisma);
 
-app.get(`${ROUTE.API}${ROUTE.PROJECTS}`, async (c) => {
-  const prisma = getPrisma(c.env.portfolio_db);
-  const projects = await prisma.project.findMany();
-  return c.json(projects);
-});
+//post
+postSkill(app, prisma);
+postContact(app, prisma);
 
-app.get(`${ROUTE.API}${ROUTE.SKILLS}`, async (c) => {
-  const prisma = getPrisma(c.env.portfolio_db);
-  const skills = await prisma.skill.findMany();
-  return c.json(skills.map((s: { name: string }) => s.name));
-});
+//put
+putContact(app, prisma);
 
-app.get(`${ROUTE.API}${ROUTE.ABOUT}`, async (c) => {
-  const prisma = getPrisma(c.env.portfolio_db);
-  const about = await prisma.about.findFirst();
-  return c.json(about);
-});
-
-app.get(`${ROUTE.API}${ROUTE.EXPERIENCE}`, async (c) => {
-  const prisma = getPrisma(c.env.portfolio_db);
-  const experience = await prisma.experience.findMany();
-  return c.json(experience);
-});
-
-app.get(`${ROUTE.API}${ROUTE.CONTACT}`, (c) => {
-  const contact = { email: "nhan@example.com", phone: "+84 123456789" };
-  return c.json(contact);
-});
-
-app.post(`${ROUTE.API}${ROUTE.SKILLS}`, async (c) => {
-  const prisma = getPrisma(c.env.portfolio_db);
-  const { name } = await c.req.json();
-  const newSkill = await prisma.skill.create({ data: { name } });
-  return c.json(newSkill);
+//health check
+app.get(ROUTE.HEALTH, (c) => {
+  return c.json({ status: "OK" });
 });
 
 export default app;
