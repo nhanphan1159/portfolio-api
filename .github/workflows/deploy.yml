@@ -37,7 +37,7 @@ jobs:
       # npx prisma migrate dev (local)
       # npx prisma migrate deploy (production - when prisma supports D1 better)
       # For now, schema changes are deployed via Prisma Client only
-      
+
       # Note: Cloudinary secrets are set manually via:
       # npx wrangler secret put CLOUDINARY_CLOUD_NAME
       # npx wrangler secret put CLOUDINARY_API_KEY
