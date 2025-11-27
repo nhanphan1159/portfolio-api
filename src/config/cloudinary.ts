@@ -97,8 +97,6 @@ export const uploadToCloudinary = async (
 
     const uploadUrl = `https://api.cloudinary.com/v1_1/${config.cloud_name}/image/upload`;
 
-    console.log("📤 Uploading to Cloudinary via REST API...");
-
     const response = await fetch(uploadUrl, {
       method: "POST",
       body: formData,
@@ -106,7 +104,6 @@ export const uploadToCloudinary = async (
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Cloudinary upload failed:", errorText);
       throw new Error(
         `Cloudinary API error: ${response.status} - ${errorText}`
       );
@@ -114,21 +111,12 @@ export const uploadToCloudinary = async (
 
     const result = (await response.json()) as any;
 
-    console.log("✅ Cloudinary upload successful:", result.secure_url);
-
     return {
       url: result.url,
       secureUrl: result.secure_url,
       publicId: result.public_id,
     };
   } catch (error) {
-    // Log detailed error for debugging
-    console.error("Cloudinary upload error details:", {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-      hasCloudinaryConfig: !!cloudinary.config().cloud_name,
-    });
-
     // Return more specific error message
     if (error instanceof Error) {
       throw new Error(`Cloudinary upload failed: ${error.message}`);
