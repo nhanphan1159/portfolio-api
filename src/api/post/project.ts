@@ -14,6 +14,17 @@ export const postProject = (
   // POST project with file upload support
   app.post(`${ROUTE.API}${ROUTE.PROJECTS}`, async (c) => {
     try {
+      // Check if D1 database is available
+      if (!prisma && !c.env.portfolio_db) {
+        return c.json(
+          {
+            error: "Database not configured",
+            details: "D1 database binding is missing",
+          },
+          500
+        );
+      }
+
       const db = prisma || getPrisma(c.env.portfolio_db);
 
       // Configure Cloudinary
@@ -44,9 +55,16 @@ export const postProject = (
 
       // Upload imgMain (required)
       if (imgMainFile && imgMainFile instanceof File) {
-        console.log(`📸 Uploading main image: ${imgMainFile.name} (${(imgMainFile.size / 1024).toFixed(2)}KB)`);
+        console.log(
+          `📸 Uploading main image: ${imgMainFile.name} (${(
+            imgMainFile.size / 1024
+          ).toFixed(2)}KB)`
+        );
         const arrayBuffer = await imgMainFile.arrayBuffer();
-        const result = await uploadToCloudinary(arrayBuffer, "portfolio/projects");
+        const result = await uploadToCloudinary(
+          arrayBuffer,
+          "portfolio/projects"
+        );
         imgMainUrl = result.secureUrl;
         console.log(`✅ Main image uploaded: ${imgMainUrl}`);
       } else {
@@ -60,7 +78,9 @@ export const postProject = (
 
         for (const file of fileArray) {
           if (file instanceof File) {
-            console.log(`  - Uploading: ${file.name} (${(file.size / 1024).toFixed(2)}KB)`);
+            console.log(
+              `  - Uploading: ${file.name} (${(file.size / 1024).toFixed(2)}KB)`
+            );
             const arrayBuffer = await file.arrayBuffer();
             const result = await uploadToCloudinary(
               arrayBuffer,
