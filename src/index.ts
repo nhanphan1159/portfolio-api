@@ -11,6 +11,7 @@ import { getContact } from "./api/get/contact";
 import { postSkill } from "./api/post/skill";
 import { postContact } from "./api/post/contact";
 import { postProject } from "./api/post/project";
+import { postUpload } from "./api/post/upload";
 import { putContact } from "./api/put/contact";
 import { putProject } from "./api/put/project";
 
@@ -39,6 +40,7 @@ getContact(app, prisma);
 postSkill(app, prisma);
 postContact(app, prisma);
 postProject(app, prisma);
+postUpload(app);
 
 //put
 putContact(app, prisma);
