@@ -10,7 +10,9 @@ import { getExperience } from "./api/get/experience";
 import { getContact } from "./api/get/contact";
 import { postSkill } from "./api/post/skill";
 import { postContact } from "./api/post/contact";
+import { postProject } from "./api/post/project";
 import { putContact } from "./api/put/contact";
+import { putProject } from "./api/put/project";
 
 const app = new Hono<{ Bindings: IBindings }>();
 
@@ -36,9 +38,11 @@ getContact(app, prisma);
 //post
 postSkill(app, prisma);
 postContact(app, prisma);
+postProject(app, prisma);
 
 //put
 putContact(app, prisma);
+putProject(app, prisma);
 
 //health check
 app.get(ROUTE.HEALTH, (c) => {

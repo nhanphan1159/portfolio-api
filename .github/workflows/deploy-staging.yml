@@ -3,7 +3,7 @@ name: Deploy to Staging
 on:
   push:
     branches:
-      - develop
+      - develop # Deploy staging khi push lên branch develop
 
 jobs:
   deploy-staging:
@@ -36,3 +36,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy --minify --env staging
+        # Lưu ý: Cần config environment "staging" trong wrangler.jsonc

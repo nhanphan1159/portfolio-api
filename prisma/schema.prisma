@@ -8,9 +8,14 @@ generator client {
 }
 
 model Project {
-  id   Int    @id @default(autoincrement())
-  name String
-  url  String
+  id      Int      @id @default(autoincrement())
+  title   String   @default("")
+  task    String   @default("")  
+  imgMain String   @default("")  
+  img     String   @default("[]") 
+  url     String? 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Skill {

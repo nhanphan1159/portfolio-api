@@ -3,10 +3,10 @@ name: Deploy to Cloudflare Workers
 on:
   push:
     branches:
-      - main
+      - main # Deploy khi push lên branch main
   pull_request:
     branches:
-      - main
+      - main # Optional: Test khi tạo PR
 
 jobs:
   deploy:
@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "20" # Hoặc version bạn đang dùng
           cache: "pnpm"
 
       - name: Install dependencies
@@ -34,9 +34,7 @@ jobs:
         run: pnpm prisma generate
 
       - name: Run Migrations (Optional)
-        run: |
-          # Chạy migrations nếu cần
-          # npx wrangler d1 migrations apply portfolio-db --remote
+        run: npx wrangler d1 migrations apply portfolio-db --remote
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
