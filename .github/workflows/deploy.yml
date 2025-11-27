@@ -33,11 +33,10 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm prisma generate
 
-      - name: Run Migrations (Optional)
-        run: npx wrangler d1 migrations apply portfolio-db --remote
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      # Note: Migrations should be run manually with:
+      # npx prisma migrate dev (local)
+      # npx prisma migrate deploy (production - when prisma supports D1 better)
+      # For now, schema changes are deployed via Prisma Client only
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
