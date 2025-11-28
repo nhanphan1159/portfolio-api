@@ -3,13 +3,17 @@ import { ROUTE } from "../../constants/common";
 import { getPrisma } from "../../connection/db";
 import { PrismaClient } from "@prisma/client";
 
-export const getSkill = (
+export const putSkill = (
   app: Hono<{ Bindings: IBindings }>,
   prisma?: PrismaClient
 ) => {
-  app.get(`${ROUTE.API}${ROUTE.SKILLS}`, async (c) => {
+  app.put(`${ROUTE.API}${ROUTE.SKILLS}`, async (c) => {
     const db = prisma || getPrisma(c.env.portfolio_db);
-    const skills = await db.skill.findMany();
-    return c.json(skills);
+    const { id, name } = await c.req.json();
+    const updatedSkill = await db.skill.update({
+      where: { id },
+      data: { name },
+    });
+    return c.json(updatedSkill);
   });
 };

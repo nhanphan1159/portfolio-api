@@ -14,6 +14,8 @@ import { postProject } from "./api/post/project";
 import { postUpload } from "./api/post/upload";
 import { putContact } from "./api/put/contact";
 import { putProject } from "./api/put/project";
+import { putSkill } from "./api/put/skill";
+import { deleteSkill } from "./api/delete/skill";
 
 const app = new Hono<{ Bindings: IBindings }>();
 
@@ -51,6 +53,10 @@ postUpload(app);
 //put
 putContact(app, prisma);
 putProject(app, prisma);
+putSkill(app, prisma);
+
+//delete
+deleteSkill(app, prisma);
 
 //health check
 app.get(ROUTE.HEALTH, (c) => {

@@ -12,30 +12,6 @@ async function main() {
   await prisma.experience.deleteMany();
   await prisma.contact.deleteMany();
 
-  // Thêm projects
-  const projects = await prisma.project.createMany({
-    data: [
-      {
-        name: "Personal Portfolio Website",
-        url: "https://myportfolio.com",
-      },
-      {
-        name: "E-commerce Platform",
-        url: "https://shop-demo.com",
-      },
-      {
-        name: "Blog Platform",
-        url: "https://myblog.com",
-      },
-      {
-        name: "Task Management App",
-        url: "https://taskmanager.com",
-      },
-    ],
-  });
-
-  console.log(`✅ Created ${projects.count} projects`);
-
   const about = await prisma.about.createMany({
     data: [
       {
