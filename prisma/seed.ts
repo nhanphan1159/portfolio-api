@@ -29,7 +29,7 @@ async function main() {
       {
         company: "Tech Solutions Inc.",
         startAt: "Jan 2022",
-        endAT: "Present",
+        endAt: "Present",
         role: "Front End Developer",
         job: JSON.stringify([
           "Develop and maintain web applications using React and Next.js",

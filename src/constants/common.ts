@@ -32,7 +32,7 @@ export const isStartBeforeEnd = (
   if (start >= end) {
     return {
       valid: false,
-      message: "startAt must be before endAT (MM-YYYY).",
+      message: "startAt must be before endAt (MM-YYYY).",
     };
   }
 

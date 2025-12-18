@@ -36,7 +36,7 @@ model About {
 model Experience {
   id        Int      @id @default(autoincrement())
   startAt   String
-  endAT     String
+  endAt     String
   role      String
   company   String
   job       String   // Store as JSON string
