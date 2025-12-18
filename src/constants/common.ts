@@ -7,6 +7,7 @@ export const ROUTE = {
   ABOUT: "/about",
   EXPERIENCE: "/experience",
   HEALTH: "/health",
+  EDUCATION: "/education",
 };
 
 export const isDateValid = (dateStr: string): boolean => {

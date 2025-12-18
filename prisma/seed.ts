@@ -6,71 +6,84 @@ async function main() {
   console.log("🌱 Seeding database...");
 
   // Xóa dữ liệu cũ
-  await prisma.skill.deleteMany();
-  await prisma.project.deleteMany();
-  await prisma.about.deleteMany();
-  await prisma.experience.deleteMany();
-  await prisma.contact.deleteMany();
+  // await prisma.skill.deleteMany();
+  // await prisma.project.deleteMany();
+  // await prisma.about.deleteMany();
+  // await prisma.experience.deleteMany();
+  // await prisma.contact.deleteMany();
+  await prisma.education.deleteMany();
 
-  const about = await prisma.about.createMany({
+  // const about = await prisma.about.createMany({
+  //   data: [
+  //     {
+  //       name: "Phan Huynh Huu Nhan",
+  //       role: "Front End Developer",
+  //       content:
+  //         "Crafting beautiful, performant web experiences with React, Next.js, and modern web technologies. Passionate about building scalable applications with smooth animations and intuitive user interfaces.",
+  //     },
+  //   ],
+  // });
+  // console.log(`✅ Created ${about.count} about entries`);
+
+  // const experience = await prisma.experience.createMany({
+  //   data: [
+  //     {
+  //       company: "Tech Solutions Inc.",
+  //       startAt: "Jan 2022",
+  //       endAt: "Present",
+  //       role: "Front End Developer",
+  //       job: JSON.stringify([
+  //         "Develop and maintain web applications using React and Next.js",
+  //         "Collaborate with design team to implement UI/UX improvements",
+  //         "Write clean, maintainable code following best practices",
+  //       ]),
+  //     },
+  //   ],
+  // });
+  // console.log(`✅ Created ${experience.count} experience entries`);
+
+  // // Thêm contact
+  // const contact = await prisma.contact.createMany({
+  //   data: [
+  //     {
+  //       address: "Ho Chi Minh City, Vietnam",
+  //       email: "nhanphan1159@gmail.com",
+  //       phone: "+84 383 283 926",
+  //     },
+  //   ],
+  // });
+  // console.log(`✅ Created ${contact.count} contact entries`);
+
+  // // Thêm skills
+  // const skills = await prisma.skill.createMany({
+  //   data: [
+  //     { name: "JavaScript" },
+  //     { name: "TypeScript" },
+  //     { name: "Node.js" },
+  //     { name: "Hono" },
+  //     { name: "React" },
+  //     { name: "Next.js" },
+  //     { name: "TailwindCSS" },
+  //     { name: "Prisma" },
+  //     { name: "PostgreSQL" },
+  //     { name: "Git" },
+  //   ],
+  // });
+
+  const education = await prisma.education.createMany({
     data: [
       {
-        name: "Phan Huynh Huu Nhan",
-        role: "Front End Developer",
-        content:
-          "Crafting beautiful, performant web experiences with React, Next.js, and modern web technologies. Passionate about building scalable applications with smooth animations and intuitive user interfaces.",
+        school: "University of Technology, Ho Chi Minh City",
+        degree: "Bachelor of Science in Computer Science",
+        startAt: "2020",
+        endAt: "2024",
+        description: "Description of the education",
+        GPA: "3.07",
       },
     ],
   });
-  console.log(`✅ Created ${about.count} about entries`);
-
-  const experience = await prisma.experience.createMany({
-    data: [
-      {
-        company: "Tech Solutions Inc.",
-        startAt: "Jan 2022",
-        endAt: "Present",
-        role: "Front End Developer",
-        job: JSON.stringify([
-          "Develop and maintain web applications using React and Next.js",
-          "Collaborate with design team to implement UI/UX improvements",
-          "Write clean, maintainable code following best practices",
-        ]),
-      },
-    ],
-  });
-  console.log(`✅ Created ${experience.count} experience entries`);
-
-  // Thêm contact
-  const contact = await prisma.contact.createMany({
-    data: [
-      {
-        address: "Ho Chi Minh City, Vietnam",
-        email: "nhanphan1159@gmail.com",
-        phone: "+84 383 283 926",
-      },
-    ],
-  });
-  console.log(`✅ Created ${contact.count} contact entries`);
-
-  // Thêm skills
-  const skills = await prisma.skill.createMany({
-    data: [
-      { name: "JavaScript" },
-      { name: "TypeScript" },
-      { name: "Node.js" },
-      { name: "Hono" },
-      { name: "React" },
-      { name: "Next.js" },
-      { name: "TailwindCSS" },
-      { name: "Prisma" },
-      { name: "PostgreSQL" },
-      { name: "Git" },
-    ],
-  });
-
-  console.log(`✅ Created ${skills.count} skills`);
-  console.log("🎉 Seeding completed!");
+  // console.log(`✅ Created ${skills.count} skills`);
+  // console.log("🎉 Seeding completed!");
 }
 
 main()
