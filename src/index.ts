@@ -18,6 +18,9 @@ import { putSkill } from "./api/put/skill";
 import { deleteSkill } from "./api/delete/skill";
 import { getProjectDetail } from "./api/get/projectdetail";
 import { postExperience } from "./api/post/experience";
+import { getEducation } from "./api/get/education";
+import { postEducation } from "./api/post/education";
+import { putEducation } from "./api/put/education";
 
 const app = new Hono<{ Bindings: IBindings }>();
 
@@ -45,6 +48,7 @@ getSkill(app, prisma);
 getAbout(app, prisma);
 getExperience(app, prisma);
 getContact(app, prisma);
+getEducation(app, prisma);
 
 //get detail
 getProjectDetail(app, prisma);
@@ -55,11 +59,13 @@ postContact(app, prisma);
 postProject(app, prisma);
 postUpload(app);
 postExperience(app, prisma);
+postEducation(app, prisma);
 
 //put
 putContact(app, prisma);
 putProject(app, prisma);
 putSkill(app, prisma);
+putEducation(app, prisma);
 
 //delete
 deleteSkill(app, prisma);
