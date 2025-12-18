@@ -9,19 +9,18 @@ export const postExperience = (
 ) => {
   app.post(`${ROUTE.API}${ROUTE.EXPERIENCE}`, async (c) => {
     const db = prisma || getPrisma(c.env.portfolio_db);
-    const { startAt, endAT, role, company, job } = await c.req.json();
+    const { startAt, endAt, role, company, job } = await c.req.json();
 
-    if (!isDateValid(startAt) || !isDateValid(endAT)) {
+    if (!isDateValid(startAt) || !isDateValid(endAt)) {
       return c.json({ error: "Invalid date format. Use MM-YYYY." }, 400);
     }
 
-    const compare = isStartBeforeEnd(startAt, endAT);
+    const compare = isStartBeforeEnd(startAt, endAt);
     if (!compare.valid) {
       return c.json({ error: compare.message }, 400);
     }
-    console.log(startAt, endAT, role, company, job);
     const newExperience = await db.experience.create({
-      data: { startAt, endAT, role, company, job },
+      data: { startAt, endAt, role, company, job },
     });
     return c.json(newExperience);
   });
