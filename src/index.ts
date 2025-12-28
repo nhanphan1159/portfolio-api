@@ -21,6 +21,8 @@ import { postExperience } from "./api/post/experience";
 import { getEducation } from "./api/get/education";
 import { postEducation } from "./api/post/education";
 import { putEducation } from "./api/put/education";
+import { deleteExperience } from "./api/delete/experience";
+import { putExperience } from "./api/put/experience";
 
 const app = new Hono<{ Bindings: IBindings }>();
 
@@ -65,10 +67,12 @@ postEducation(app, prisma);
 putContact(app, prisma);
 putProject(app, prisma);
 putSkill(app, prisma);
+putExperience(app, prisma);
 putEducation(app, prisma);
 
 //delete
 deleteSkill(app, prisma);
+deleteExperience(app, prisma);
 
 //health check
 app.get(ROUTE.HEALTH, (c) => {
