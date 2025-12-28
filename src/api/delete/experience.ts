@@ -7,11 +7,12 @@ export const deleteExperience = (
   app: Hono<{ Bindings: IBindings }>,
   prisma?: PrismaClient
 ) => {
-  // Delete single skill
-  app.delete(`${ROUTE.API}${ROUTE.EXPERIENCE}`, async (c) => {
+  // Delete single or multiple experience records by ID(s) in URL
+  app.delete(`${ROUTE.API}${ROUTE.EXPERIENCE}/:id`, async (c) => {
     const db = prisma || getPrisma(c.env.portfolio_db);
-    const body = await c.req.json();
-    const { id } = body;
+    const idsParam = c.req.param("id");
+    const id = idsParam.split("/").map((id) => parseInt(id));
+
     if (id.length >= 2) {
       const deletedExperiences = await db.experience.deleteMany({
         where: {
@@ -26,7 +27,7 @@ export const deleteExperience = (
       });
     } else {
       const deletedExperience = await db.experience.delete({
-        where: { id },
+        where: { id: id[0] },
       });
 
       return c.json({
