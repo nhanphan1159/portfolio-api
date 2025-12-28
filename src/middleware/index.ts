@@ -2,9 +2,11 @@ import { cors } from "hono/cors";
 
 export const corsMiddleware = () => {
   return cors({
-    origin: "*", // Allow all origins, hoặc specify domain của bạn
+    origin: "*",
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+    credentials: false,
   });
 };
