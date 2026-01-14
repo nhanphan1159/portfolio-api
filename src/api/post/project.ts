@@ -116,14 +116,11 @@ export const postProject = (
     const db = prisma || getPrisma(c.env.portfolio_db);
 
     const body = await c.req.json();
-    const { title, task, imgMain, img, url } = body;
+    const { title, imgMain, img, url } = body;
 
     // Validate required fields
-    if (!title || !task || !imgMain) {
-      return c.json(
-        { error: "Missing required fields: title, task, imgMain" },
-        400
-      );
+    if (!title || !imgMain) {
+      return c.json({ error: "Missing required fields: title, imgMain" }, 400);
     }
 
     // Convert img array to JSON string if it's an array
