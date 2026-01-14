@@ -34,7 +34,6 @@ export const postProject = (
       const body = await c.req.parseBody({ all: true });
 
       const title = body["title"] as string;
-      const task = body["task"] as string;
       const url = body["url"] as string;
 
       // Handle imgMain - can be single value or array (take first if array)
@@ -46,8 +45,8 @@ export const postProject = (
       // Handle img - parseBody with {all: true} should return array if multiple files
       let imgFiles = body["img"];
       // Validate required fields
-      if (!title || !task) {
-        return c.json({ error: "Missing required fields: title, task" }, 400);
+      if (!title) {
+        return c.json({ error: "Missing required field: title" }, 400);
       }
 
       let imgMainUrl = "";
@@ -86,7 +85,6 @@ export const postProject = (
       const project = await db.project.create({
         data: {
           title,
-          task,
           imgMain: imgMainUrl,
           img: JSON.stringify(imgUrls),
           url: url || null,
