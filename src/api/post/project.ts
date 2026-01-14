@@ -45,9 +45,6 @@ export const postProject = (
       // Handle img - parseBody with {all: true} should return array if multiple files
       let imgFiles = body["img"];
       // Validate required fields
-      if (!title) {
-        return c.json({ error: "Missing required field: title" }, 400);
-      }
 
       let imgMainUrl = "";
       let imgUrls: string[] = [];
