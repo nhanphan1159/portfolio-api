@@ -30,26 +30,43 @@ export const postProject = (
       // Configure Cloudinary
       configureCloudinary(c.env);
 
-      // Parse multipart form data - parseBody has limitations with multiple files
-      const body = await c.req.parseBody({ all: true });
+      // Determine content type and parse accordingly
+      const contentType = c.req.header("content-type") || "";
+      let title: string;
+      let url: string;
+      let imgMainFile: unknown;
+      let imgFiles: unknown;
+      let task: string;
 
-      const title = body["title"] as string;
-      const url = body["url"] as string;
+      if (contentType.includes("application/json")) {
+        // Handle JSON request (base64 data URLs or direct URLs)
+        const jsonBody = await c.req.json();
+        title = jsonBody.title;
+        url = jsonBody.url;
+        imgMainFile = jsonBody.imgMain;
+        imgFiles = jsonBody.img;
+      } else {
+        // Parse multipart form data - parseBody has limitations with multiple files
+        const body = await c.req.parseBody({ all: true });
 
-      // Handle imgMain - can be single value or array (take first if array)
-      let imgMainFile = body["imgMain"];
-      if (Array.isArray(imgMainFile)) {
-        imgMainFile = imgMainFile[0];
+        title = body["title"] as string;
+        url = body["url"] as string;
+
+        // Handle imgMain - can be single value or array (take first if array)
+        imgMainFile = body["imgMain"];
+        if (Array.isArray(imgMainFile)) {
+          imgMainFile = imgMainFile[0];
+        }
+
+        // Handle img - parseBody with {all: true} should return array if multiple files
+        imgFiles = body["img"];
       }
-
-      // Handle img - parseBody with {all: true} should return array if multiple files
-      let imgFiles = body["img"];
       // Validate required fields
 
       let imgMainUrl = "";
       let imgUrls: string[] = [];
 
-      // Upload imgMain (required)
+      // Upload imgMain (required) - supports both File and base64 data URL
       if (imgMainFile && imgMainFile instanceof File) {
         const arrayBuffer = await imgMainFile.arrayBuffer();
         const result = await uploadToCloudinary(
@@ -57,6 +74,26 @@ export const postProject = (
           "portfolio/projects"
         );
         imgMainUrl = result.secureUrl;
+      } else if (
+        typeof imgMainFile === "string" &&
+        imgMainFile.startsWith("data:")
+      ) {
+        // Handle base64 data URL
+        const base64Data = imgMainFile.split(",")[1];
+        const buffer = Uint8Array.from(atob(base64Data), (c) =>
+          c.charCodeAt(0)
+        );
+        const result = await uploadToCloudinary(
+          buffer.buffer,
+          "portfolio/projects"
+        );
+        imgMainUrl = result.secureUrl;
+      } else if (
+        typeof imgMainFile === "string" &&
+        imgMainFile.startsWith("http")
+      ) {
+        // Already a URL, use directly
+        imgMainUrl = imgMainFile;
       } else {
         return c.json({ error: "imgMain file is required" }, 400);
       }
@@ -74,6 +111,20 @@ export const postProject = (
               "portfolio/projects"
             );
             imgUrls.push(result.secureUrl);
+          } else if (typeof file === "string" && file.startsWith("data:")) {
+            // Handle base64 data URL
+            const base64Data = file.split(",")[1];
+            const buffer = Uint8Array.from(atob(base64Data), (c) =>
+              c.charCodeAt(0)
+            );
+            const result = await uploadToCloudinary(
+              buffer.buffer,
+              "portfolio/projects"
+            );
+            imgUrls.push(result.secureUrl);
+          } else if (typeof file === "string" && file.startsWith("http")) {
+            // Already a URL, use directly
+            imgUrls.push(file);
           }
         }
       }
@@ -116,7 +167,7 @@ export const postProject = (
     const db = prisma || getPrisma(c.env.portfolio_db);
 
     const body = await c.req.json();
-    const { title, imgMain, img, url } = body;
+    const { title, task, imgMain, img, url } = body;
 
     // Validate required fields
     if (!title || !imgMain) {
