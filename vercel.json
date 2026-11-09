@@ -1,6 +1,6 @@
 {
   "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "npx prisma migrate deploy && npx prisma generate",
+  "buildCommand": "npx prisma generate",
   "rewrites": [
     {
       "source": "/(.*)",
