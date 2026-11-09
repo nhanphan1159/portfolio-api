@@ -30,7 +30,13 @@ export const isStartBeforeEnd = (
     return { valid: false, message: "Invalid date format. Use MM-YYYY." };
   }
 
-  if (start >= end) {
+  // Compare as year*12+month; plain string comparison of MM-YYYY is wrong across years
+  const toMonths = (s: string) => {
+    const [month, year] = s.split("-").map(Number);
+    return year * 12 + month;
+  };
+
+  if (toMonths(start) >= toMonths(end)) {
     return {
       valid: false,
       message: "startAt must be before endAt (MM-YYYY).",

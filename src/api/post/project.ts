@@ -36,12 +36,13 @@ export const postProject = (
       let url: string;
       let imgMainFile: unknown;
       let imgFiles: unknown;
-      let task: string;
+      let task: string | undefined;
 
       if (contentType.includes("application/json")) {
         // Handle JSON request (base64 data URLs or direct URLs)
         const jsonBody = await c.req.json();
         title = jsonBody.title;
+        task = jsonBody.task;
         url = jsonBody.url;
         imgMainFile = jsonBody.imgMain;
         imgFiles = jsonBody.img;
@@ -50,6 +51,7 @@ export const postProject = (
         const body = await c.req.parseBody({ all: true });
 
         title = body["title"] as string;
+        task = body["task"] as string | undefined;
         url = body["url"] as string;
 
         // Handle imgMain - can be single value or array (take first if array)
@@ -61,7 +63,9 @@ export const postProject = (
         // Handle img - parseBody with {all: true} should return array if multiple files
         imgFiles = body["img"];
       }
-      // Validate required fields
+      if (!title) {
+        return c.json({ error: "Missing required field: title" }, 400);
+      }
 
       let imgMainUrl = "";
       let imgUrls: string[] = [];
@@ -133,6 +137,7 @@ export const postProject = (
       const project = await db.project.create({
         data: {
           title,
+          task: task || "",
           imgMain: imgMainUrl,
           img: JSON.stringify(imgUrls),
           url: url || null,

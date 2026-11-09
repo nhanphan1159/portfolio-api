@@ -12,7 +12,10 @@ export const deleteSkill = (
     const db = prisma || getPrisma(c.env.portfolio_db);
     const body = await c.req.json();
     const { id } = body;
-    if (id.length >= 2) {
+    if (Array.isArray(id)) {
+      if (id.length === 0) {
+        return c.json({ error: "id is required" }, 400);
+      }
       const deletedSkills = await db.skill.deleteMany({
         where: {
           id: { in: id },

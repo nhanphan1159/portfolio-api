@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { PrismaClient } from "@prisma/client";
 import { ROUTE } from "./constants/common";
 import { corsMiddleware } from "./middleware";
@@ -26,7 +27,7 @@ import { putExperience } from "./api/put/experience";
 import { putAbout } from "./api/put/about";
 import { postAbout } from "./api/post/about";
 
-const app = new Hono<{ Bindings: IBindings }>();
+const app = new Hono<{ Bindings: IBindings }>({ strict: false });
 
 // Add CORS middleware
 app.use("/*", corsMiddleware());
@@ -85,6 +86,25 @@ app.get(ROUTE.HEALTH, (c) => {
 
 // Global error handler
 app.onError((err, c) => {
+  if (err instanceof HTTPException) {
+    return err.getResponse();
+  }
+
+  if (err instanceof SyntaxError) {
+    return c.json({ error: "Invalid JSON body" }, 400);
+  }
+
+  const code = (err as { code?: string }).code;
+  if (code === "P2025") {
+    return c.json({ error: "Record not found" }, 404);
+  }
+  if (code === "P2002") {
+    return c.json({ error: "Record already exists" }, 409);
+  }
+  if (err.name === "PrismaClientValidationError") {
+    return c.json({ error: "Invalid or missing fields in request body" }, 400);
+  }
+
   console.error("Global error:", err);
   return c.json(
     {

@@ -9,10 +9,26 @@ export const getProjectDetail = (
 ) => {
   app.get(`${ROUTE.API}${ROUTE.PROJECTS}/:id`, async (c) => {
     const db = prisma || getPrisma(c.env.portfolio_db);
-    const id = parseInt(c.req.param("id") || "0", 10);
-    const projects = await db.project.findUnique({
+    const id = parseInt(c.req.param("id") || "", 10);
+    if (Number.isNaN(id)) {
+      return c.json({ error: "Invalid id" }, 400);
+    }
+    const project = await db.project.findUnique({
       where: { id },
     });
-    return c.json(projects);
+    if (!project) {
+      return c.json({ error: "Project not found" }, 404);
+    }
+    return c.json({ ...project, img: safeParseArray(project.img) });
   });
+};
+
+const safeParseArray = (value: string | null | undefined) => {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 };
